@@ -1,0 +1,5 @@
+resources/terraform/.terraform
+resources/terraform/dev-input.tfvars
+resources/terraform/terraform.tfstate
+resources/terraform/terraform.tfstate.*
+

@@ -217,7 +217,7 @@ rm -f config.hcl
 
 ```sh
 export DOMAIN_NAME=imc.domain.com
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ingress_private_key.pem  -out ingress-cert.pem -subj "/CN=${DOMAIN_NAME}"
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ingress_private_key.pem  -out ingress-cert.pem -subj "/CN=${DOMAIN_NAME}/O=${DOMAIN_NAME}"
 kubectl create -n ${NAMESPACE} secret tls imc-tls --key ingress_private_key.pem --cert ingress-cert.pem
 rm -f ingress_private_key.pem ingress-cert.pem
 ```
