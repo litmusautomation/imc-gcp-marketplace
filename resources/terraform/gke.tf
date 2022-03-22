@@ -49,6 +49,48 @@ resource "kubernetes_secret" "google-application-credentials" {
   ]
 }
 
+resource "random_password" "mysql-root" {
+  length           = 16
+  special          = true
+}
+
+resource "random_password" "mysql-replication-root" {
+  length           = 16
+  special          = true
+}
+
+resource "random_password" "imc-enc-string" {
+  length           = 16
+  special          = true
+}
+
+resource "kubernetes_secret" "imc-enc-string" {
+  metadata {
+    name = "imc-enc-string"
+    namespace = var.imc_k8s_namespace
+  }
+  data = {
+    "imc-enc-string" = random_password.imc-enc-string.result
+  }
+  depends_on = [
+    kubernetes_namespace.imc
+  ]
+}
+
+resource "kubernetes_secret" "mysql-creds" {
+  metadata {
+    name = "imc-mysql-creds"
+    namespace = var.imc_k8s_namespace
+  }
+  data = {
+    "mysql-root-password" = random_password.mysql-root.result
+    "mysql-replication-password" = random_password.mysql-replication-root.result
+  }
+  depends_on = [
+    kubernetes_namespace.imc
+  ]
+}
+
 locals {
   vault_config = <<-EOT
     ui = true
@@ -60,14 +102,9 @@ locals {
     storage "gcs" {
       bucket = "${google_storage_bucket.imc_vault_bucket_name.name}"
     }
-    seal "gcpckms" {
-      project     = "${var.imc_project_id}"
-      region      = "global"
-      key_ring    = "${data.google_kms_key_ring.vault-keyring.name}"
-      crypto_key  = "${data.google_kms_crypto_key.vault-unseal.name}"
-    }
   EOT
 }
+
 
 resource "kubernetes_secret" "vault-storage-config" {
   metadata {

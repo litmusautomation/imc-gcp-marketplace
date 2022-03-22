@@ -290,7 +290,7 @@ The plan command alone will not actually carry out the proposed changes, and so 
 ```sh
 # IMC Deployment Step 1.1.15
 
-terraform plan -var-file=~/projects/$PROJECTID/input.tfvars  -out=tfplan
+terraform plan -var-file=~/projects/$PROJECTID/imc-gcp-marketplace/input.tfvars  -out=tfplan
 ```
 
 #### 1.1.15. Terraform apply: The apply command executes the actions proposed in a Terraform plan.
