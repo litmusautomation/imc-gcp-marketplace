@@ -96,9 +96,6 @@ gcloud services enable --project=${GCP_PROJECT_ID} \
 ```sh
 gsutil mb -p ${GCP_PROJECT_ID} "gs://imc-data-${GCP_PROJECT_ID}"
 gsutil cors set resources/gs-bucket-cors.json "gs://imc-data-${GCP_PROJECT_ID}"
-
-gsutil mb -p ${GCP_PROJECT_ID} "gs://imc-vault-${GCP_PROJECT_ID}"
-gsutil versioning set on "gs://imc-vault-${GCP_PROJECT_ID}"
 ```
 
 ### Create Pub/Sub topics
@@ -107,13 +104,6 @@ gsutil versioning set on "gs://imc-vault-${GCP_PROJECT_ID}"
 gcloud pubsub topics create input-messages \
     --labels=env=imc,service=pubsub \
     --project=${GCP_PROJECT_ID}
-```
-
-### Create Cloud KMS
-
-```sh
-gcloud kms keyrings create imc-vault-kr --location global --project ${GCP_PROJECT_ID}
-gcloud kms keys create imc-vault-unseal --location global --keyring imc-vault-kr --purpose encryption --project ${GCP_PROJECT_ID}
 ```
 
 ### Create Cloud public IP addresses
@@ -148,15 +138,11 @@ TBD
 ```sh
 export IMC_SA_NAME='imc-app'
 gcloud iam service-accounts create ${IMC_SA_NAME} --display-name "IMC application service account" --project ${GCP_PROJECT_ID}
-gsutil iam ch serviceAccount:${IMC_SA_NAME}@${GCP_PROJECT_ID}.iam.gserviceaccount.com:objectAdmin gs://imc-vault-${GCP_PROJECT_ID}
-gcloud kms keys add-iam-policy-binding imc-vault-unseal --location global --keyring imc-vault-kr --member serviceAccount:${IMC_SA_NAME}@${GCP_PROJECT_ID}.iam.gserviceaccount.com \
-    --role roles/cloudkms.cryptoKeyEncrypterDecrypter --project ${GCP_PROJECT_ID}
 gsutil iam ch serviceAccount:${IMC_SA_NAME}@${GCP_PROJECT_ID}.iam.gserviceaccount.com:roles/storage.admin gs://imc-data-${GCP_PROJECT_ID}    
 gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} --member="serviceAccount:${IMC_SA_NAME}@${GCP_PROJECT_ID}.iam.gserviceaccount.com" --role='roles/cloudiot.admin'
 gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} --member="serviceAccount:${IMC_SA_NAME}@${GCP_PROJECT_ID}.iam.gserviceaccount.com" --role='roles/cloudsql.client'
 gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} --member="serviceAccount:${IMC_SA_NAME}@${GCP_PROJECT_ID}.iam.gserviceaccount.com" --role='roles/pubsub.serviceAgent'
 gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} --member="serviceAccount:${IMC_SA_NAME}@${GCP_PROJECT_ID}.iam.gserviceaccount.com" --role='roles/pubsub.admin'
-gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} --member="serviceAccount:${IMC_SA_NAME}@${GCP_PROJECT_ID}.iam.gserviceaccount.com" --role='roles/secretmanager.secretAccessor'
 gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} --member="serviceAccount:${IMC_SA_NAME}@${GCP_PROJECT_ID}.iam.gserviceaccount.com" --role='roles/iam.serviceAccountAdmin'
 gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} --member="serviceAccount:${IMC_SA_NAME}@${GCP_PROJECT_ID}.iam.gserviceaccount.com" --role='roles/iam.serviceAccountKeyAdmin'
 gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} --member="serviceAccount:${IMC_SA_NAME}@${GCP_PROJECT_ID}.iam.gserviceaccount.com" --role='roles/iam.serviceAccountTokenCreator'
@@ -186,31 +172,6 @@ kubectl create namespace ${NAMESPACE}
 gcloud iam service-accounts keys create --project ${GCP_PROJECT_ID} --iam-account ${IMC_SA_NAME}@${GCP_PROJECT_ID}.iam.gserviceaccount.com imc_sa_key.json
 kubectl -n ${NAMESPACE} create secret generic imc-sa-key --from-file=imc_sa_key.json
 rm -f imc_sa_key.json
-```
-
-### Create a secret with vault configuration
-
-```sh
-cat <<EOF >>config.hcl
-ui = true
-listener "tcp" {
-  tls_disable = 1
-  address = "[::]:8200"
-  cluster_address = "[::]:8201"
-}
-storage "gcs" {
-  bucket = "imc-vault-${GCP_PROJECT_ID}"
-}
-seal "gcpckms" {
-  project     = "${GCP_PROJECT_ID}"
-  region      = "global"
-  key_ring    = "imc-vault-kr"
-  crypto_key  = "imc-vault-unseal"
-}
-EOF
-
-kubectl create secret -n $NAMESPACE generic vault-storage-config --from-file=config.hcl
-rm -f config.hcl
 ```
 
 ### Generate a secret with self-signed ssl certificate for ingress

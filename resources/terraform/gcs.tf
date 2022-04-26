@@ -21,19 +21,3 @@ resource "google_storage_bucket_iam_binding" "binding_data" {
   ]
 }
 
-resource "google_storage_bucket" "imc_vault_bucket_name" {
-  name          = "${var.imc_project_id}-${var.imc_vault_bucket_name_suffix}"
-  project       = var.imc_project_id
-  location      = var.imc_region
-  storage_class = "REGIONAL"
-  force_destroy = true
-  labels        = var.imc_deployment_labels
-}
-
-resource "google_storage_bucket_iam_binding" "binding_vault" {
-  bucket = google_storage_bucket.imc_vault_bucket_name.name
-  role = "roles/storage.objectAdmin"
-  members = [
-    "serviceAccount:${google_service_account.imc_sa.email}",
-  ]
-}

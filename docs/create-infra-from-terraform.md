@@ -246,8 +246,6 @@ cat <<EOF >~/projects/$PROJECTID/input.tfvars
 imc_project_id = "${PROJECTID}"
 imc_region = "${REGION}"
 imc_zone = "${ZONE}"
-imc_oauth_client_id = "client"
-imc_oauth_client_secret = "secret"
 create_imde_pubsub_topic = false
 imc_domain_name = "${IMC_DOMAIN_NAME}"
 
@@ -264,16 +262,7 @@ git clone https://github.com/litmusautomation/imc-gcp-marketplace.git
 cd ~/projects/$PROJECTID/
 ```
 
-### 1.1.13 Create Cloud KMS
-
-Cloud KMS is created outside terraform scrupt
-
-```sh
-gcloud kms keyrings create imc-vault-kr --location global --project ${PROJECTID}
-gcloud kms keys create imc-vault-unseal --location global --keyring imc-vault-kr --purpose encryption --project ${PROJECTID}
-```
-
-# IMC Deployment Step 1.1.14
+# IMC Deployment Step 1.1.13
 
 ```
 cd  ~/projects/$PROJECTID/imc-gcp-marketplace/resources/terraform
@@ -281,7 +270,7 @@ cd  ~/projects/$PROJECTID/imc-gcp-marketplace/resources/terraform
 terraform init
 ```
 
-#### 1.1.15. Terraform plan: It creates an execution plan that:
+#### 1.1.14. Terraform plan: It creates an execution plan that:
 * Reads the current state of any already-existing remote objects to make sure that the Terraform state is
   up-to-date.
 * Compares the current configuration to the prior state and noting any differences.

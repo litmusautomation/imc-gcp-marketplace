@@ -7,14 +7,6 @@ variable "imc_region" {
 variable "imc_zone" {
     description = "Default zone where all services are being provisioned."
 }
-variable "imc_oauth_client_id" {
-    type      = string
-    sensitive = true
-}
-variable "imc_oauth_client_secret" {
-    type      = string
-    sensitive = true
-}
 variable "imc_deployment_labels" {
     type = map(string)
     default = {
@@ -78,12 +70,6 @@ variable "imc_data_bucket_name_suffix" {
   type = string
   description = "GCS data_bucket suffics"
   default = "imc-data"
-}
-
-variable "imc_vault_bucket_name_suffix" {
-  type = string
-  description = "GCS vault bucket suffics"
-  default = "imc-vault"
 }
 
 variable "create_imde_pubsub_topic" {

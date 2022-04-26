@@ -64,6 +64,11 @@ resource "random_password" "imc-enc-string" {
   special          = true
 }
 
+resource "random_password" "imc-cfg-token" {
+  length           = 20
+  special          = true
+}
+
 resource "kubernetes_secret" "imc-enc-string" {
   metadata {
     name = "imc-enc-string"
@@ -71,6 +76,19 @@ resource "kubernetes_secret" "imc-enc-string" {
   }
   data = {
     "imc-enc-string" = random_password.imc-enc-string.result
+  }
+  depends_on = [
+    kubernetes_namespace.imc
+  ]
+}
+
+resource "kubernetes_secret" "imc-cfg-token" {
+  metadata {
+    name = "imc-cfg-token"
+    namespace = var.imc_k8s_namespace
+  }
+  data = {
+    "imc-cfg-token" = random_password.imc-cfg-token.result
   }
   depends_on = [
     kubernetes_namespace.imc
@@ -85,34 +103,6 @@ resource "kubernetes_secret" "mysql-creds" {
   data = {
     "mysql-root-password" = random_password.mysql-root.result
     "mysql-replication-password" = random_password.mysql-replication-root.result
-  }
-  depends_on = [
-    kubernetes_namespace.imc
-  ]
-}
-
-locals {
-  vault_config = <<-EOT
-    ui = true
-    listener "tcp" {
-      tls_disable = 1
-      address = "[::]:8200"
-      cluster_address = "[::]:8201"
-    }
-    storage "gcs" {
-      bucket = "${google_storage_bucket.imc_vault_bucket_name.name}"
-    }
-  EOT
-}
-
-
-resource "kubernetes_secret" "vault-storage-config" {
-  metadata {
-    name = "vault-storage-config"
-    namespace = var.imc_k8s_namespace
-  }
-  data = {
-    "config.hcl" = local.vault_config
   }
   depends_on = [
     kubernetes_namespace.imc
