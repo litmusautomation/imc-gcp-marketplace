@@ -2,14 +2,14 @@
 
 ## 1 Pre-Requisites and environment preparation
 
-For deployment of the IMC, the prerequisites described in the subchapters below need to be fulfilled.
+For deployment of the MC, the prerequisites described in the subchapters below need to be fulfilled.
 Please prepare the required GCP variables.
 
 ```sh
 export PROJECTID="customer-imcproject-h123" # ProjectID we will use for the creation
 export GCP_ORGID="123456789012"              # Id of your organisation
 export GCP_FOLDERID="123456789012"         # or alternatively ID of an GCP org folder 
-export BILLING_ACCOUNT_ID="123-123-123"      # to be used by the IMC project
+export BILLING_ACCOUNT_ID="123-123-123"      # to be used by the MC project
 export LOCATION="us"                           # We recomend to use EU or US
 export IMC_DOMAIN_NAME="domain.com"
 ```
@@ -20,7 +20,7 @@ We recommend using [Google Cloud Shell](https://cloud.google.com/shell/docs/usin
  
 ***Note for CloudShell:*** Please check and upgrade if needed your local packages by running:
 ```sh
-# IMC Deployment Step 1.1
+# MC Deployment Step 1.1
 
 sudo apt-get update
 sudo apt-get upgrade
@@ -32,18 +32,18 @@ If you prefer to install **Google Cloud SDK (gcloud)** on your local machine ple
 Please verify that the connectivity between the gcloud command and the Cloud is working by executing this command in your shell:
 
 ```sh
-# IMC Deployment Step 1.2
+# MC Deployment Step 1.2
 
 gcloud init
 ```
 If requested, please login and authorize your terminal to connect to your GCP organisation.
 
-### 1.3 Boostraping **GCP project** (new & dedicated for IMC)
+### 1.3 Boostraping **GCP project** (new & dedicated for MC)
 You can create new project from the command line by using commands below. The script will set up default region variables based on selected loaction, 
 it will create the project and link it to given billing account
 
 ```sh
-# IMC Deployment Step 4.1.3
+# MC Deployment Step 4.1.3
 
 # proposed regions with highest relevant service coverage on given continent
 if [ $LOCATION = "europe" ]; then
@@ -78,13 +78,13 @@ gcloud compute project-info add-metadata \
 
 ### 1.4 **ServiceAccount**
   
-We recommend creating a service accounts in the IMC project:
-* **imc-terraform** - used for execution of the infrastructure as a code (IaaC) scripts
+We recommend creating a service accounts in the MC project:
+* **MC-terraform** - used for execution of the infrastructure as a code (IaaC) scripts
 
 **Note:** You can create the account using the command line below.
 
 ```sh
-# IMC Deployment Step 1.4
+# MC Deployment Step 1.4
 
 export SA_TERRAFORM="imc-tf"
 gcloud iam service-accounts create $SA_TERRAFORM --display-name "IMC Terraform deployment account" --project ${PROJECTID}
@@ -106,7 +106,7 @@ gcloud projects add-iam-policy-binding ${PROJECTID} --member="serviceAccount:${S
 We will use Terraform (1.0.9+) for the provisioning of the solution infrastructure. Terraform can be installed in your local project folder with code below, or in case you prefer installation for all users - you can follow [manual installation instructions](https://www.terraform.io/downloads.html) or [installation using packet management apt](https://www.terraform.io/docs/cli/install/apt.html).
 
 ```sh
-# IMC Deployment Step 1.5
+# MC Deployment Step 1.5
 
 mkdir -p ~/projects/$PROJECTID/bin
 cd ~/projects/$PROJECTID/bin
@@ -127,7 +127,7 @@ terraform -v
 If you are running these commands usign CloudShell, you can skip this step.
 The deployment of the Kubernetes CLI tools is optional, since the deployment script doesn't use it. However, they may be useful for troubleshooting purposes.
 ```sh
-# IMC Deployment Step 1.6
+# MC Deployment Step 1.6
  
 cd ~/projects/$PROJECTID/bin
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
@@ -142,7 +142,7 @@ kubectl version --client
 To be able to generate service tokens for the impersonated service accounts, the IAM credentials and the resource manager services must be enabled on the project. You can enable those services by running the below command
 
 ```shell
-# IMC Deployment Step 1.7
+# MC Deployment Step 1.7
 
 gcloud services enable iamcredentials.googleapis.com cloudresourcemanager.googleapis.com
 ```
@@ -155,7 +155,7 @@ In case the ***roles/serviceusage.serviceUsageAdmin*** role cannot be assigned t
 You can use the command below to enable the required APIs by account with higher privileges.
 
 ```sh
-# IMC Deployment Step 1.8
+# MC Deployment Step 1.8
 # enable services defined in terraform/modules/api-services/variables.tf
 
 gcloud services enable cloudapis.googleapis.com \
@@ -197,7 +197,7 @@ TBD
 
 TBD
 
-### 1.11 IMC deployment
+### 1.11 MC deployment
 
 Next we will save the information into a shell environment configuration file (setup.sh), we will use during the deployment. You can create this by running the command below:
 ```sh
@@ -238,7 +238,7 @@ gcloud auth application-default login
 ```
 
 ```sh
-# IMC Deployment Step 1.1.12
+# MC Deployment Step 1.1.12
 
 cat <<EOF >~/projects/$PROJECTID/input.tfvars
 # Created on $(date) by ${USER}
@@ -252,7 +252,7 @@ imc_domain_name = "${IMC_DOMAIN_NAME}"
 EOF
 ```
 
-### IMC Deployment Step 1.1.12
+### MC Deployment Step 1.1.12
 
 ```sh
 
@@ -262,7 +262,7 @@ git clone https://github.com/litmusautomation/imc-gcp-marketplace.git
 cd ~/projects/$PROJECTID/
 ```
 
-# IMC Deployment Step 1.1.13
+# MC Deployment Step 1.1.13
 
 ```
 cd  ~/projects/$PROJECTID/imc-gcp-marketplace/resources/terraform
@@ -277,14 +277,14 @@ terraform init
 
 The plan command alone will not actually carry out the proposed changes, and so you can use this command to check whether the proposed changes match what you expected before you apply the changes.
 ```sh
-# IMC Deployment Step 1.1.15
+# MC Deployment Step 1.1.15
 
 terraform plan -var-file=~/projects/$PROJECTID/imc-gcp-marketplace/input.tfvars  -out=tfplan
 ```
 
 #### 1.1.15. Terraform apply: The apply command executes the actions proposed in a Terraform plan.
 ```sh
-# IMC Deployment Step 1.1.15
+# MC Deployment Step 1.1.15
 
 terraform apply -auto-approve tfplan
 ```

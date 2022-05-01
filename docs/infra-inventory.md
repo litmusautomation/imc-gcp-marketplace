@@ -1,6 +1,6 @@
 # GCP Service dependencies
 
-The IMC depends on the following GCP services to run its data platform services.
+The MC depends on the following GCP services to run its data platform services.
 
 | Resource | Description |
 |---|---|

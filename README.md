@@ -1,19 +1,19 @@
 
-Intelligent Manufacturing Connect is an integrated edge-to-cloud Industrial IoT platform that provides everything you need to put industrial data to work to enable smart manufacturing. The solution is purpose-built to collect, process and analyze data at the edge, then rapidly integrate the data with the Google Cloud Platform for analytics, AI and machine learning. 
+Manufacturing Connect is an integrated edge-to-cloud Industrial IoT platform that provides everything you need to put industrial data to work to enable smart manufacturing. The solution is purpose-built to collect, process and analyze data at the edge, then rapidly integrate the data with the Google Cloud Platform for analytics, AI and machine learning. 
 
-This document is a guide to install the IMC in Google Cloud Platform (GCP).
+This document is a guide to install the MC in Google Cloud Platform (GCP).
 
-# Install the IMC
+# Install the MC
 
-To install the IMC, you must first create the GCP services on which the IMC depends. Once the GCP services are created, you will deploy the IMC from the Google Cloud Marketplace.
+To install the MC, you must first create the GCP services on which the MC depends. Once the GCP services are created, you will deploy the MC from the Google Cloud Marketplace.
 
-> **Note:** the Kubernetes cluster, GCP services, and IMC application should all live in the same GCP project.
+> **Note:** the Kubernetes cluster, GCP services, and MC application should all live in the same GCP project.
 
 #### 1. Create required GCP infrastructure
 
-The IMC's services are deployed into a Kubernetes cluster. The cluster must be created before deploying the IMC from the Google Cloud Marketplace.
+The MC's services are deployed into a Kubernetes cluster. The cluster must be created before deploying the MC from the Google Cloud Marketplace.
 
-The IMC's services also depend on GCP services, such as CloudSQL and CloudStorage. The GCP services must be created before deploying the IMC from the Google Cloud Marketplace.
+The MC's services also depend on GCP services, such as CloudSQL and CloudStorage. The GCP services must be created before deploying the MC from the Google Cloud Marketplace.
 
 > **NOTE:** `gcloud` version `330.0.0` or higher is required for the following steps.
 
@@ -27,26 +27,26 @@ To create all of these resources, we offer three options:
 
 You may also want to review [the full inventory of GCP service dependencies](/docs/infra-inventory.md).
 
-#### 2. Deploy the IMC via Google Cloud Marketplace
+#### 2. Deploy the MC via Google Cloud Marketplace
 
-After you've created a Kubernetes cluster and the GCP service dependencies, you can [deploy the IMC from the Google Cloud Marketplace](https://console.cloud.google.com/marketplace/details/litmus-public/intelligent-manufacturing-connect). Associate your IMC purchase with a valid billing account and then follow the on-screen instructions.
+After you've created a Kubernetes cluster and the GCP service dependencies, you can [deploy the MC from the Google Cloud Marketplace](https://console.cloud.google.com/kubernetes/application(cameo:product/litmus-public/intelligent-manufacturing-connect)). Associate your MC purchase with a valid billing account and then follow the on-screen instructions.
 
 Once finished, review the post installation steps below.
 
-# Uninstall the IMC
+# Uninstall the MC
 
 #### Via the Google Cloud console
 
-Use the Google Cloud Platform console to uninstall the IMC.
+Use the Google Cloud Platform console to uninstall the MC.
 
 1.  In the GCP Console, open your
     [Kubernetes applications](https://console.cloud.google.com/Kubernetes/application).
-2.  From the list of applications, click **`IMC`**.
+2.  From the list of applications, click **`MC`**.
 3.  On the Application Details page, click **`Delete`**.
 
 #### Via the command-line
 
-You may also uninstall the IMC via the command-line.
+You may also uninstall the MC via the command-line.
 
 **Prepare the environment**
 

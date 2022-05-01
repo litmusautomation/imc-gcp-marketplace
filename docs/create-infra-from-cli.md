@@ -1,6 +1,6 @@
-# Use the command-line to create the IMC's dependencies
+# Use the command-line to create the MC's dependencies
 
-The IMC is dependent on a GKE cluster and GCP services. They may be created from the command-line using the `gcloud` command (alternatively, you may use the [Terraform](/docs/create-infra-from-terraform.md)).
+The MC is dependent on a GKE cluster and GCP services. They may be created from the command-line using the `gcloud` command (alternatively, you may use the [Terraform](/docs/create-infra-from-terraform.md)).
 
 To see a full list of the resources that are required, see the [Infrastructure Inventory](/docs/infra-inventory.md) doc.
 
@@ -72,7 +72,7 @@ gcloud beta container \
 
 ## Create the GCP services
 
-The following section walks you through how to create the IMC's required GCP services from the command-line.
+The following section walks you through how to create the MC's required GCP services from the command-line.
 
 ### Enable the required GCP APIs
 
@@ -133,7 +133,7 @@ TBD
 
 TBD
 
-### Create Service account for IMC
+### Create Service account for MC
 
 ```sh
 export IMC_SA_NAME='imc-app'
@@ -183,7 +183,7 @@ kubectl create -n ${NAMESPACE} secret tls imc-tls --key ingress_private_key.pem 
 rm -f ingress_private_key.pem ingress-cert.pem
 ```
 
-### Print values for deployment IMC via Google Cloud Marketplace
+### Print values for deployment MC via Google Cloud Marketplace
 
 ```sh
 INGRESS_LB_IP=$(gcloud compute addresses describe imc-ingress-ip --region ${GCP_REGION} --project ${GCP_PROJECT_ID} --format="value(address)")
