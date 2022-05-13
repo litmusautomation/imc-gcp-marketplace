@@ -1,4 +1,4 @@
-# Use the command-line to create the IMC's dependencies
+# Use the command line to create the IMC's dependencies
 
 ## 1 Pre-Requisites and environment preparation
 
