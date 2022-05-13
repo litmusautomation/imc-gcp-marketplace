@@ -1,5 +1,5 @@
 resource "google_storage_bucket" "imc_data_bucket_name" {
-  name          = "${var.imc_project_id}-${var.imc_data_bucket_name_suffix}"
+  name          = "${var.imc_data_bucket_name_suffix}-${var.imc_project_id}"
   project       = var.imc_project_id
   location      = var.imc_region
   storage_class = "REGIONAL"
