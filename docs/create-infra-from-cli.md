@@ -1,4 +1,4 @@
-# Use the command-line to create the MC's dependencies
+# Use the command line to create the MC's dependencies
 
 The MC is dependent on a GKE cluster and GCP services. They may be created from the command-line using the `gcloud` command (alternatively, you may use the [Terraform](/docs/create-infra-from-terraform.md)).
 
